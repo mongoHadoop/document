@@ -1,0 +1,147 @@
+初始化一个Git仓库，使用git init命令。
+
+添加文件到Git仓库，分两步：
+
+第一步，使用命令git add <file>，注意，可反复多次使用，添加多个文件；
+git add  readme.txt
+
+
+第二步，使用命令git commit，完成。
+
+git commit -m  '备注'
+
+2步完成文件提交 和svn一样。
+
+
+git status 查看文件状态
+
+git diff <file> 查看文件修改后
+
+要随时掌握工作区的状态，使用git status命令。
+
+如果git status告诉你有文件被修改过，用git diff可以查看修改内容。
+
+git log 查询历史提交记录 
+
+
+
+git reset --hard HEARD^ 
+
+现在我想使用版本回退操作，我想把当前的版本回退到上一个版本，要使用什么命令呢？可以使用如下2种命令，第一种是：git reset  --hard HEAD^ 那么如果要回退到上上个版本只需把HEAD^ 改成 HEAD^^ 以此类推。那如果要回退到前100个版本的话，使用上面的方法肯定不方便，我们可以使用下面的简便命令操作：git reset  –hard HEAD~100 即可。
+
+git reflog 查看所有的提交版本号
+
+git reset  –hard 6fcfc89来恢复了 恢复到 版本号是6fcfc89的版本
+
+HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令git reset --hard commit_id。
+
+穿梭前，用git log可以查看提交历史，以便确定要回退到哪个版本。
+
+要重返未来，用git reflog查看命令历史，以便确定要回到未来的哪个版本。
+
+
+git checkout  — file 可以丢弃工作区的修改，等同于 git reset --hard HEARD^ 恢复到当前提交最新版本
+
+命令git checkout -- readme.txt意思就是，把readme.txt文件在工作区的修改全部撤销，这里有两种情况：
+
+一种是readme.txt自修改后还没有被放到暂存区，现在，撤销修改就回到和版本库一模一样的状态；
+
+一种是readme.txt已经添加到暂存区后，又作了修改，现在，撤销修改就回到添加到暂存区后的状态。
+
+总之，就是让这个文件回到最近一次git commit或git add时的状态。
+
+git checkout -- file命令中的--很重要，没有--，就变成了“切换到另一个分支”的命令，我们在后面的分支管理中会再次遇到git checkout命令。
+
+添加远程库
+
+使用你的邮箱用ssh-keygen命令创建密码对。
+$ ssh-keygen -t rsa -C "yourname@hotmail.com"
+注意ssh-keygen命令中间没有空格，如果在ssh后面加上空格，会得到Bad escape character 'ygen'.的错误。
+
+
+ git remote add origin https://github.com/tonymusk/git.git
+
+git push -u origin master 第一次建立本地和远程仓库的关系
+
+git push  origin master  以后的推送都简化了 去掉了 -u
+
+从现在起，只要本地作了提交，就可以通过命令：
+
+$ git push origin master
+
+把本地master分支的最新修改推送至GitHub，现在，你就拥有了真正的分布式版本库！
+
+小结
+
+要关联一个远程库，使用命令git remote add origin https://github.com/tonymusk/git.git
+
+关联后，使用命令git push -u origin master第一次推送master分支的所有内容；
+
+此后，每次本地提交后，只要有必要，就可以使用命令git push origin master推送最新修改；
+
+
+
+2. 如何从远程库克隆？
+
+上面我们了解了先有本地库，后有远程库时候，如何关联远程库。
+
+git clone git@github.com:michaelliao/gitskills.git
+或者
+git clone   https://github.com/tonymusk/git.git
+
+3分支 branch
+
+$ git branch dev
+$ git checkout dev
+或者
+git checkout -b  [branchName] 
+-----git checkout命令加上-b参数表示创建并切换，相当于上面2条命令
+
+ git checkout master 没有-b 也就是分支版本切换
+分支合并
+git merge [branchName] 合并
+
+合并完成后
+
+git branch -d [branchName] 删除分支版本
+
+
+
+用git log --graph命令可以看到分支合并图。
+
+小结
+
+Git鼓励大量使用分支：
+
+查看分支：git branch
+
+创建分支：git branch <name>
+
+切换分支：git checkout <name>
+
+创建+切换分支：git checkout -b <name>
+
+合并某分支到当前分支：git merge <name>
+
+删除分支：git branch -d <name>
+
+合并中的文件冲突问题：
+Git用<<<<<<<，=======，>>>>>>>标记出不同分支的内容，我们修改如下后保存：用git log --graph命令可以看到分支合并图。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
