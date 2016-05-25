@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="docSubject">
+
+  <select id="queryDocSubject"  resultClass="java.util.HashMap" parameterClass="map">
+  select 
+  				t.id as  id ,
+  				t.subject as subject,
+  				t.remark as remark
+  from 
+  				t_doc_subject t
+  <dynamic prepend="where">
+      <isNotEmpty prepend="and" property="id" >
+        t.id = #id#
+      </isNotEmpty>
+     <isNotEmpty prepend="and" property="subject" >
+         t.subject like concat('%', #subject#, '%')
+      </isNotEmpty>
+    </dynamic>
+    <dynamic>
+	     <isNotEmpty property="begin" >
+	        limit $begin$,$pageSize$
+	      </isNotEmpty>
+     </dynamic>	
+  </select>
+   
+  <insert id="insertDocSubject"  parameterClass="map" >
+    insert into t_doc_subject
+    <dynamic prepend="(" >
+      <isNotEmpty prepend="," property="subject" >
+       subject
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="remark" >
+       remark
+      </isNotEmpty>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+       <isNotEmpty prepend="," property="subject" >
+    	#subject#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="remark" >
+       #remark#
+      </isNotEmpty>
+      )
+    </dynamic>
+  </insert>
+  
+  <update id="updateDocSubjectById" parameterClass="map" >
+    update t_doc_subject
+    <dynamic prepend="set" >
+       <isNotEmpty prepend="," property="subject" >
+       subject=#subject#
+      </isNotEmpty>    
+      <isNotEmpty prepend="," property="remark" >
+       remark=#remark#
+      </isNotEmpty>
+    </dynamic>
+    	where  id = #id#
+  </update>
+  	
+	<delete id="deleteSubjectId" parameterClass="map">
+  	delete 
+  	from 
+  		 	t_doc_subject
+  	where	
+  			id=#id#	 	 
+  </delete>
+  
+</sqlMap>

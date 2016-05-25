@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-lazy-init="true"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd" 
+       default-autowire="byType">
+
+	<bean id="docInfoService" class="com.doc.services.DocInfoServiceImpl"
+		scope="prototype" >
+	</bean>
+	<bean id="docSubjectService" class="com.doc.services.DocSubjectServiceImpl"
+		scope="prototype">
+	</bean>
+	<bean id="docFileService" class="com.doc.services.DocFileServiceImpl"
+		scope="prototype">
+	</bean>
+	
+	<bean id="sysOrgService" class="com.doc.services.SysOrgServiceImpl"
+		scope="prototype">
+	</bean>
+	<bean id="sysRoleService" class="com.doc.services.SysRoleServiceImpl"
+		scope="prototype">
+	</bean>
+	<bean id="sysUserService" class="com.doc.services.SysUserServiceImpl"
+		scope="prototype">
+	</bean>
+	<bean id="sysManagerService" class="com.doc.services.SysManagerServiceImpl"
+		scope="prototype">
+	</bean>
+	<bean id="sysMenuService" class="com.doc.services.SysMenuServiceImpl"
+		scope="prototype">
+	</bean>
+</beans>

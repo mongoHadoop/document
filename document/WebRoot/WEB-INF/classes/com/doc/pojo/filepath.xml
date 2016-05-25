@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="filepath">
+  <select id="queryFilePath"  resultClass="java.util.HashMap" parameterClass="map">
+  select 
+  				t.id as  fileId ,
+  				
+  				t.doc_id as docId,
+  			
+  				t.file_path as filePath,
+  				
+  				t.file_type as fileType
+  				
+  from 
+  				t_file_path t
+  <dynamic prepend="where">
+      <isNotEmpty prepend="and" property="id" >
+        t.id = #id#
+      </isNotEmpty>
+       <isNotEmpty prepend="and" property="docId" >
+        t.doc_id = #docId#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="fileType" >
+        t.file_type = #fileType#
+      </isNotEmpty>
+      
+    </dynamic>
+  </select>
+  <insert id="insertFilePath"  parameterClass="map" >
+    insert into t_file_path
+    <dynamic prepend="(" >
+      <isNotEmpty prepend="," property="docId" >
+       doc_id
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="filePath" >
+       file_path
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="fileType" >
+      	file_type
+      </isNotEmpty>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+     <isNotEmpty prepend="," property="docId" >
+       #docId#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="filePath" >
+        #filePath#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="fileType" >
+      $fileType$
+      </isNotEmpty>
+      )
+    </dynamic>
+  </insert>
+  
+
+  	
+ <delete id="deleteFilePath" parameterClass="map">
+  	delete 
+  	from 
+  		 	t_file_path
+  	where	
+  			id=#fileId#	
+  	<dynamic>
+       <isNotEmpty prepend="and" property="docId" >
+         doc_id = #docId#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="filePath" >
+        file_path = #filePath#
+      </isNotEmpty>
+    </dynamic>		
+ </delete>
+
+</sqlMap>

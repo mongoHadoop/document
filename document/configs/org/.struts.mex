@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Struts2Diagram version="2.0">
+  <package name="report" location="50,50" size="170,221">
+    <action name="importReport" location="10,20" size="150,40" />
+    <action name="queryReportList" location="10,70" size="150,41">
+      <result name="success" />
+    </action>
+    <action name="exportReport" location="10,170" size="150,41">
+      <result name="success" />
+    </action>
+    <action name="exportErrorReport" location="0,0" size="0,0">
+      <result name="success" />
+    </action>
+  </package>
+  <webResource name="console-edit.jsp" path="/admin/catalog/console-edit.jsp" location="10,1045" size="150,55" />
+  <webResource name="json_struts2.jsp" path="/json_struts2.jsp" location="612,1150" size="150,55" />
+  <webResource name="success.jsp" path="/admin/success.jsp" location="602,310" size="150,55" />
+  <webResource name="index.jsp" path="index.jsp" location="622,485" size="150,55" />
+  <webResource name="cont1.jsp" path="cont1.jsp" location="622,660" size="150,55" />
+  <webResource name="cont2.jsp" path="cont2.jsp" location="132,835" size="150,55" />
+  <webResource name="list.jsp" path="list.jsp" location="622,135" size="150,55" />
+</Struts2Diagram>
+

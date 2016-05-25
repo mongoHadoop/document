@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="sysmenu">
+
+  <select id="querySysMenu"  resultClass="java.util.HashMap" parameterClass="map">
+		SELECT
+				t.id as menuId,
+				t.menu_name as menuName,
+				t.url,
+				t.remark 
+		FROM
+				t_sys_menu t
+     
+  <dynamic prepend="where">
+      <isNotEmpty prepend="and" property="userId" >
+        t.id = #menuId#
+      </isNotEmpty>
+     <isNotEmpty prepend="and" property="menuName" >
+         t.menu_name like concat('%', #menuName#, '%')
+      </isNotEmpty>
+    </dynamic>
+    <dynamic>
+	     <isNotEmpty property="begin" >
+	        limit $begin$,$pageSize$
+	      </isNotEmpty>
+     </dynamic>	
+  </select>
+   
+  <insert id="insertSysMenu"  parameterClass="map" >
+    insert into t_sys_menu 
+    <dynamic prepend="(" >
+      <isNotEmpty prepend="," property="menuName" >
+       menu_name
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="url" >
+       url
+      </isNotEmpty>
+      
+     <isNotEmpty prepend="," property="remark" >
+       remark
+      </isNotEmpty>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotEmpty prepend="," property="menuName" >
+       #menuName#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="url" >
+       #url#
+      </isNotEmpty>
+     <isNotEmpty prepend="," property="remark" >
+      #remark#
+      </isNotEmpty>
+      )
+    </dynamic>
+  </insert>
+  
+  <update id="updateSysMenuById" parameterClass="map" >
+    update t_sys_menu
+    <dynamic prepend="set" >
+       <isNotEmpty prepend="," property="menuName" >
+       menu_name=#menuName#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="url" >
+       url=#url#
+      </isNotEmpty>
+     <isNotEmpty prepend="," property="remark" >
+       remark=#remark#
+      </isNotEmpty>
+    </dynamic>
+    	where  id = #menuId#
+  </update>
+  	
+	<delete id="deleteSysMenuById" parameterClass="map">
+  	delete 
+  	from 
+  		 	t_sys_menu
+  	where	
+  			id=#menuId#	 	 
+  </delete>
+  
+  <select id="queryNotGrantMenu"  resultClass="java.util.HashMap" parameterClass="map">
+		SELECT
+				t.id as menuId,
+				t.menu_name as menuName,
+				t.url,
+				t.remark 
+		FROM
+				t_sys_menu t
+     
+  <dynamic prepend="where">
+      <isNotEmpty prepend="and" property="userId" >
+        t.id = #menuId#
+      </isNotEmpty>
+     <isNotEmpty prepend="and" property="menuName" >
+         t.menu_name like concat('%', #menuName#, '%')
+      </isNotEmpty>
+    </dynamic>
+    <dynamic>
+	     <isNotEmpty property="begin" >
+	        limit $begin$,$pageSize$
+	      </isNotEmpty>
+     </dynamic>	
+  </select>
+  
+  <select id="queryGrantMenu"  resultClass="java.util.HashMap" parameterClass="map">
+  	select 
+  				t.id as menuId,
+				t.menu_name as menuName,
+				t.url,
+				t.remark 
+  	from 
+  			t_sys_menu t
+  	where 
+  			t.id in 
+			
+			(	select 
+						distinct t1.menu_id 
+				from  
+						 t_sys_role_menu t1
+				where		
+						t1.role_id =$roleId$	
+			) 
+	order by t.id
+  </select>
+   
+</sqlMap>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-lazy-init="true"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd" 
+       default-autowire="byType">
+    <bean id="sysInterceptor" class="com.doc.action.SysInterceptor"
+		scope="prototype">
+	</bean>       
+       
+   <bean id="loginAction" class="com.doc.action.LoginAction"
+		scope="prototype">
+	</bean>   
+       
+	<bean id="docAction" class="com.doc.action.DocManageAcction"
+		scope="prototype">
+	</bean>
+	
+	<bean id="imageUpload" class="com.doc.action.ImageUploadAction"
+		scope="prototype">
+	</bean>
+	
+	
+	<bean id="excelUploadAction" class="com.doc.action.ExcelUploadAction"
+		scope="prototype">
+	</bean>	
+	
+	<bean id="docSubjectAction" class="com.doc.action.DocSubjectAction"
+		scope="prototype">
+	</bean>	
+	
+	<bean id="sysManagerAction" class="com.doc.action.SysManagerAction"
+		scope="prototype">
+	</bean>	
+	<bean id="sysUserAction" class="com.doc.action.SysUserAction"
+		scope="prototype">
+	</bean>	
+	
+	<bean id="sysOrgAction" class="com.doc.action.SysOrgAction"
+		scope="prototype">
+	</bean>	
+	
+	<bean id="sysRoleAction" class="com.doc.action.SysRoleAction"
+		scope="prototype">
+	</bean>	
+	<bean id="sysMenuAction" class="com.doc.action.SysMenuAction"
+		scope="prototype">
+	</bean>	
+	
+</beans>

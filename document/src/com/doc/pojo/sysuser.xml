@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="sysuser">
+
+  <select id="querySysUser"  resultClass="java.util.HashMap" parameterClass="map">
+	SELECT
+			t.id as userId,
+			t.user_code as userCode,
+			t.user_name as userName,
+			t.user_pwd as pwd,
+			t.role_id as roleId,
+			t.org_id as orgId,
+			t1.role_name as roleName,
+			t2.org_name as orgName,
+			t.remark
+	FROM
+		t_sys_user t 
+	left join 
+	    t_sys_role t1 
+	    on t.role_id = t1.id
+    left join 
+       t_sys_org t2
+       on t.org_id = t2.id	    
+     
+  <dynamic prepend="where">
+      <isNotEmpty prepend="and" property="userId" >
+        t.id = #userId#
+      </isNotEmpty>
+       <isNotEmpty prepend="and" property="userCode" >
+        t.user_code = #userCode#
+      </isNotEmpty>
+     <isNotEmpty prepend="and" property="userName" >
+         t.user_name like concat('%', #userName#, '%')
+      </isNotEmpty>
+    </dynamic>
+    <dynamic>
+	     <isNotEmpty property="begin" >
+	        limit $begin$,$pageSize$
+	      </isNotEmpty>
+     </dynamic>	
+  </select>
+   
+  <insert id="insertDocUser"  parameterClass="map" >
+    insert into t_sys_user 
+    <dynamic prepend="(" >
+      <isNotEmpty prepend="," property="userName" >
+       user_name
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="userCode" >
+       user_code
+      </isNotEmpty>
+       <isNotEmpty prepend="," property="pwd" >
+       user_pwd
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="roleId" >
+       role_id
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="orgId" >
+      	org_id
+      </isNotEmpty>
+     <isNotEmpty prepend="," property="remark" >
+       remark
+      </isNotEmpty>
+      
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+       <isNotEmpty prepend="," property="userName" >
+		#userName#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="userCode" >
+       #userCode#
+      </isNotEmpty>
+       <isNotEmpty prepend="," property="pwd" >
+		#pwd#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="roleId" >
+       #roleId#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="orgId" >
+      	#orgId#
+      </isNotEmpty>
+     <isNotEmpty prepend="," property="remark" >
+      #remark#
+      </isNotEmpty>
+      )
+    </dynamic>
+  </insert>
+  
+  <update id="updateSysUserById" parameterClass="map" >
+    update t_sys_user
+    <dynamic prepend="set" >
+       <isNotEmpty prepend="," property="userName" >
+       user_name=#userName#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="userCode" >
+       user_code=#userCode#
+      </isNotEmpty>
+       <isNotEmpty prepend="," property="pwd" >
+       user_pwd=#pwd#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="roleId" >
+       role_id=#roleId#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="orgId" >
+      	org_id=#orgId#
+      </isNotEmpty>
+     <isNotEmpty prepend="," property="remark" >
+       remark=#remark#
+      </isNotEmpty>
+    </dynamic>
+    	where  id = #userId#
+  </update>
+  	
+	<delete id="deleteSysUserById" parameterClass="map">
+  	delete 
+  	from 
+  		 	t_sys_user
+  	where	
+  			id=#userId#	 	 
+  </delete>
+  
+</sqlMap>

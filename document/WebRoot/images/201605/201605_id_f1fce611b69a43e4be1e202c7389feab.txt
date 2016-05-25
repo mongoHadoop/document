@@ -1,0 +1,14 @@
+2年会议量对比接口
+字典码查询 ：
+
+院级会议
+部门会议
+所级会议
+
+
+会议接口没有未读取数量
+
+GetMyMailUnReadNum 邮件数量查询
+GetMyMeetingNum 会议数量查询
+GetMyReadInfoUnReadNum 阅知件数量查询
+GetMyMessageUnReadNum 我的消息查询

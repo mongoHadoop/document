@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.role//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="sysrole">
+
+  <select id="querySysrole"  resultClass="java.util.HashMap" parameterClass="map">
+		SELECT
+				t.id as roleId,
+				t.role_name as roleName,
+				t.remark 
+		FROM
+				t_sys_role t
+     
+  <dynamic prepend="where">
+      <isNotEmpty prepend="and" property="userId" >
+        t.id = #roleId#
+      </isNotEmpty>
+     <isNotEmpty prepend="and" property="roleName" >
+         t.role_name like concat('%', #roleName#, '%')
+      </isNotEmpty>
+    </dynamic>
+    <dynamic>
+	     <isNotEmpty property="begin" >
+	        limit $begin$,$pageSize$
+	      </isNotEmpty>
+     </dynamic>	
+  </select>
+  
+  
+  <select id="queryrolemenu"  resultClass="java.util.HashMap" parameterClass="map">
+		SELECT
+				t.id as roleId,
+				t.role_name as roleName,
+				t.remark 
+		FROM
+				t_sys_menu t, t_sys_role_menu t1
+	
+	   where 	
+	   t.id = t1.menu_id		
+  <dynamic >
+      <isNotEmpty prepend="and" property="userId" >
+        t1.role_id = #roleId#
+      </isNotEmpty>
+    </dynamic>
+    <dynamic>
+	     <isNotEmpty property="begin" >
+	        limit $begin$,$pageSize$
+	      </isNotEmpty>
+     </dynamic>	
+  </select>
+  
+   
+  <insert id="insertSysrole"  parameterClass="map" >
+    insert into t_sys_role 
+    <dynamic prepend="(" >
+      <isNotEmpty prepend="," property="roleName" >
+       role_name
+      </isNotEmpty>
+     <isNotEmpty prepend="," property="remark" >
+       remark
+      </isNotEmpty>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotEmpty prepend="," property="roleName" >
+       #roleName#
+      </isNotEmpty>
+     <isNotEmpty prepend="," property="remark" >
+      #remark#
+      </isNotEmpty>
+      )
+    </dynamic>
+  </insert>
+  
+  <update id="updateSysroleById" parameterClass="map" >
+    update t_sys_role
+    <dynamic prepend="set" >
+       <isNotEmpty prepend="," property="roleName" >
+       role_name=#roleName#
+      </isNotEmpty>
+     <isNotEmpty prepend="," property="remark" >
+       remark=#remark#
+      </isNotEmpty>
+    </dynamic>
+    	where  id = #roleId#
+  </update>
+  	
+	<delete id="deleteSysroleById" parameterClass="map">
+  	delete 
+  	from 
+  		 	t_sys_role
+  	where	
+  			id=#roleId#	 	 
+  </delete>
+  
+</sqlMap>

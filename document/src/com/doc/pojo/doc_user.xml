@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="docuser">
+
+  <select id="queryDocUser"  resultClass="java.util.HashMap" parameterClass="map">
+	select 
+				user_id as userId,
+				user_name as userName,
+				org_id as orgId,
+				date_format(record_time,'  %Y-%m-%d  %T' ) as recordTime,
+				org_name as orgName,
+				remark 
+	from 
+				t_doc_user
+							
+	<dynamic prepend="where">
+      <isNotEmpty prepend="and" property="userId" >
+        user_id = #userId#
+      </isNotEmpty>
+     <isNotEmpty prepend="and" property="userName" >
+         user_name like concat('%', #userName#, '%')
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="orgId" >
+         org_id = $orgId$
+      </isNotEmpty>
+    </dynamic>
+     <dynamic prepend="order by">
+      <isNotEmpty property="sort" >
+      		$sort$ 
+      </isNotEmpty>
+      <isNotEmpty property="order" >
+      		$order$ 
+      </isNotEmpty>
+    </dynamic>	
+    
+    <dynamic>
+	     <isNotEmpty property="begin" >
+	        limit $begin$,$pageSize$
+	      </isNotEmpty>
+     </dynamic>	
+  </select>
+   
+  <insert id="insertDocUser"  parameterClass="map" >
+    insert into t_doc_user 
+    <dynamic prepend="(" >
+      <isNotEmpty prepend="," property="userName" >
+       user_name
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="orgId" >
+      	org_id
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="orgName" >
+       org_name
+      </isNotEmpty>
+     <isNotEmpty prepend="," property="recordTime" >
+        record_time
+      </isNotEmpty>
+     <isNotEmpty prepend="," property="remark" >
+       remark
+      </isNotEmpty>
+      
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotEmpty prepend="," property="userName" >
+       #userName#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="orgId" >
+      	#orgId#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="orgName" >
+       #orgName#
+      </isNotEmpty>
+       <isNotEmpty prepend="," property="recordTime" >
+        #recordTime#
+      </isNotEmpty>
+     <isNotEmpty prepend="," property="remark" >
+       #remark#
+      </isNotEmpty>
+      )
+    </dynamic>
+  </insert>
+  
+  <update id="updateDocUserById" parameterClass="map" >
+    update t_doc_user
+    <dynamic prepend="set" >
+       <isNotEmpty prepend="," property="userName">
+       user_name=#userName#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="orgId">
+      	org_id=#orgId#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="orgName">
+       org_name=#orgName#
+      </isNotEmpty>
+     <isNotEmpty prepend="," property="remark">
+       remark=#remark#
+      </isNotEmpty>
+    </dynamic>
+    	where  user_id = #userId#
+  </update>
+  	
+  <delete id="deleteDocUserById" parameterClass="map">
+  	delete 
+  	from 
+  		 	t_doc_user
+  	where	
+  			user_id=#userId#	 	 
+  </delete>
+  
+</sqlMap>

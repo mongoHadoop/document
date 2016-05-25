@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="sysrolemenu">
+
+  <select id="queryRoleMenuByRoleId"  resultClass="java.util.HashMap" parameterClass="map">
+		SELECT
+				t.id as menuId,
+				t.menu_name as menuName,
+				t.url,
+				t.remark 
+		FROM
+				t_sys_menu t
+     
+  <dynamic prepend="where">
+      <isNotEmpty prepend="and" property="userId" >
+        t.id = #menuId#
+      </isNotEmpty>
+     <isNotEmpty prepend="and" property="menuName" >
+         t.menu_name like concat('%', #menuName#, '%')
+      </isNotEmpty>
+    </dynamic>
+    <dynamic>
+	     <isNotEmpty property="begin" >
+	        limit $begin$,$pageSize$
+	      </isNotEmpty>
+     </dynamic>	
+  </select>
+   
+  <insert id="addRelation"  parameterClass="map" >
+    insert into t_sys_role_menu 
+    <dynamic prepend="(" >
+      <isNotEmpty prepend="," property="menuId" >
+       menu_id
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="roleId" >
+       role_id
+      </isNotEmpty>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotEmpty prepend="," property="menuId" >
+       $menuId$
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="roleId" >
+       $roleId$
+      </isNotEmpty>
+      )
+    </dynamic>
+  </insert>
+  
+  	
+	<delete id="deleterelation" parameterClass="map">
+  	delete 
+  	from 
+  		 	t_sys_role_menu
+  	where	
+  			role_id=$roleId$		 
+  </delete>
+  
+  <select id="queryGrantMenuByRoleId"  resultClass="java.util.HashMap" parameterClass="map">
+    select 
+  				t.id as menuId,
+				t.menu_name as menuName,
+				t.url,
+				t.remark 
+  	from 
+  			t_sys_menu t,t_sys_role_menu t1
+  	where 
+			t.id = t1.menu_id
+    and 
+			t1.role_id =$roleId$  			
+
+	order by t.id
+  </select>
+   
+</sqlMap>

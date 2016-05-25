@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="doc">
+
+
+<select id="queryDocInfo"  resultClass="java.util.HashMap" parameterClass="map">
+  select 
+  				t.id as  docId ,
+  				
+  				t.doc_name as docName,
+  				
+  				t.lend_type  as lendType,
+  				
+  				t.subject  as subjectId,
+  				
+  				t.money as money,
+  				  				
+  				t.org_id as orgId,
+  				
+  				t.org_name as orgName,
+  				
+  				t.record_user as recordUser,
+  			
+  				date_format(t.record_time,'  %Y-%m-%d  %T' ) as recordTime,
+  			
+  				t.file_type as fileType,
+  				
+  				t.status as status,
+  				
+  				t.remark as remark
+  from 
+  				t_doc_info t
+  <dynamic prepend="where">
+      <isNotEmpty prepend="and" property="docId" >
+        t.id = #docId#
+      </isNotEmpty>
+     <isNotEmpty prepend="and" property="docName" >
+        t.doc_name like concat('%', #docName#, '%')
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="subject" >
+        t.subject = #subject#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="money" >
+        t.money = #money#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="orgId" >
+        t.org_id = $orgId$
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="status" >
+        t.status = $status$
+      </isNotEmpty>
+      
+       <isNotEmpty prepend="and" property="recordUser" >
+       t.record_user=#recordUser#
+      </isNotEmpty>
+	  <isNotEmpty property="recordTimeBegin" prepend="and">
+		    <![CDATA[t.record_time >= #recordTimeBegin#  ]]>
+	  </isNotEmpty>
+	  <isNotEmpty property="recordTimeEnd" prepend=" and ">
+		    <![CDATA[t.record_time <= #recordTimeEnd#]]>
+	  </isNotEmpty>
+    </dynamic>
+    <dynamic prepend="order by">
+      <isNotEmpty property="sort" >
+      		t.$sort$ 
+      </isNotEmpty>
+      <isNotEmpty property="order" >
+      		$order$ 
+      </isNotEmpty>
+    </dynamic>	
+    <dynamic>
+	     <isNotEmpty property="begin" >
+	        limit $begin$,$pageSize$
+	      </isNotEmpty>
+     </dynamic>	
+  </select>
+
+
+
+  <select id="queryDocInfoleftJoin"  resultClass="java.util.HashMap" parameterClass="map">
+  select 
+  				t.id as  docId ,
+  				
+  				t.doc_name as docName,
+  				
+  				t2.subject as subject,
+  				
+  				t.lend_type as lendType,
+  				
+  				t.money as money,
+  				
+  				t.org_id as orgId,
+  				
+  				t3.org_name as orgName,
+  				
+  				t.record_user as recordUser,
+  			
+  				date_format(t.record_time,'  %Y-%m-%d  %T' ) as recordTime,
+  			
+  				t.file_type as fileType,
+  				
+  				t.user_id as userId,
+  				
+  				t4.user_name as userName,
+  				
+  				t.status as status,
+  				
+  				t.remark as remark
+  from 
+  				t_doc_info t
+  				
+  left join 
+				t_doc_subject t2
+      on 
+			    t.subject= t2.id
+   				
+  left join 
+				t_sys_org t3
+      on 
+			    t.org_id = t3.id
+  left join 
+				t_doc_user t4
+      on 
+			    t.user_id = t4.user_id				    			    
+  				
+  <dynamic prepend="where">
+      <isNotEmpty prepend="and" property="docId" >
+        t.id = #docId#
+      </isNotEmpty>
+     <isNotEmpty prepend="and" property="docName" >
+        t.doc_name like concat('%', #docName#, '%')
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="subject" >
+        t.subject = #subject#
+      </isNotEmpty>
+       <isNotEmpty prepend="and" property="lendType" >
+        t.lend_type = #lendType#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="money" >
+        t.money = #money#
+      </isNotEmpty>
+       <isNotEmpty prepend="and" property="orgId" >
+        t.org_id = #orgId#
+      </isNotEmpty>
+       <isNotEmpty prepend="and" property="recordUser" >
+       t.record_user like concat('%', #recordUser#, '%')
+      </isNotEmpty>
+	  <isNotEmpty property="recordTimeBegin" prepend="and">
+		    <![CDATA[t.record_time >= #recordTimeBegin#  ]]>
+	  </isNotEmpty>
+	  <isNotEmpty property="recordTimeEnd" prepend=" and ">
+		    <![CDATA[t.record_time <= #recordTimeEnd#]]>
+	  </isNotEmpty>
+	  <isNotEmpty prepend="and" property="status" >
+        t.status = #status#
+      </isNotEmpty>
+    </dynamic>
+    <dynamic prepend="order by">
+      <isNotEmpty property="sort" >
+      		t.$sort$ 
+      </isNotEmpty>
+      <isNotEmpty property="order" >
+      		$order$ 
+      </isNotEmpty>
+    </dynamic>	
+    	
+    <dynamic>
+	     <isNotEmpty property="begin" >
+	        limit $begin$,$pageSize$
+	      </isNotEmpty>
+     </dynamic>	
+  </select>
+   
+  <insert id="insertDocInfo"  parameterClass="map" >
+    insert into t_doc_info 
+    <dynamic prepend="(" >
+      <isNotEmpty prepend="," property="docName" >
+       doc_name
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="subject" >
+       subject
+      </isNotEmpty>
+       <isNotEmpty prepend="," property="money" >
+       money
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="orgId" >
+       org_id
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="orgName" >
+       org_name
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="recordUser" >
+       record_user
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="recordTime" >
+       record_time
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="fileType" >
+       file_type
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="remark" >
+       remark
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="status" >
+       status
+      </isNotEmpty>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+     <isNotEmpty prepend="," property="docName" >
+       #docName#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="subject" >
+        #subject#
+      </isNotEmpty>
+       <isNotEmpty prepend="," property="money" >
+        #money#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="orgId" >
+       $orgId$
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="orgName" >
+       #orgName#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="recordUser" >
+       #recordUser#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="recordTime" >
+        #recordTime#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="fileType" >
+       #fileType#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="remark" >
+       #remark#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="status" >
+       #status#
+      </isNotEmpty>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateDocInfoById" parameterClass="map" >
+    update t_doc_info
+    <dynamic prepend="set" >
+       <isNotEmpty prepend="," property="docName" >
+       doc_name=#docName#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="subject" >
+       subject =#subject#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="lendType" >
+       lend_type =#lendType#
+      </isNotEmpty>
+       <isNotEmpty prepend="," property="money" >
+       money=#money#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="recordUser" >
+       record_user=#recordUser#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="recordTime" >
+       record_time=#recordTime#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="fileType" >
+       file_type=#fileType#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="userId" >
+       user_id=$userId$
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="status" >
+       status=#status#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="remark" >
+       remark=#remark#
+      </isNotEmpty>
+	   <isNotEmpty prepend="," property="fileTypeIsNull" >
+	       file_type = null
+	   </isNotEmpty>
+    </dynamic>
+    	where  id = #docId#
+  </update>
+  	
+	<delete id="deleteDocInfo" parameterClass="map">
+  	delete 
+  	from 
+  		 	t_doc_info
+  	where	
+  			id=#docId#	 	 
+  </delete>
+  
+  
+  
+   <select id="staticsDocInfo"  resultClass="java.util.HashMap" parameterClass="map">
+  select 
+  				sum(t.money) as money
+  from 
+  				t_doc_info t
+  				
+  left join 
+				t_doc_subject t2
+      on 
+			    t.subject= t2.id
+   				
+  left join 
+				t_sys_org t3
+      on 
+			    t.org_id = t3.id			    
+  				
+  <dynamic prepend="where">
+      <isNotEmpty prepend="and" property="docId" >
+        t.id = #docId#
+      </isNotEmpty>
+     <isNotEmpty prepend="and" property="docName" >
+        t.doc_name like concat('%', #docName#, '%')
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="subject" >
+        t.subject = #subject#
+      </isNotEmpty>
+       <isNotEmpty prepend="and" property="lendType" >
+        t.lend_type = #lendType#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="money" >
+        t.money = #money#
+      </isNotEmpty>
+       <isNotEmpty prepend="and" property="orgId" >
+        t.org_id = #orgId#
+      </isNotEmpty>
+       <isNotEmpty prepend="and" property="recordUser" >
+       t.record_user like concat('%', #recordUser#, '%')
+      </isNotEmpty>
+	  <isNotEmpty property="recordTimeBegin" prepend="and">
+		    <![CDATA[t.record_time >= #recordTimeBegin#  ]]>
+	  </isNotEmpty>
+	  <isNotEmpty property="recordTimeEnd" prepend=" and ">
+		    <![CDATA[t.record_time <= #recordTimeEnd#]]>
+	  </isNotEmpty>
+	  <isNotEmpty prepend="and" property="status" >
+        t.status = #status#
+      </isNotEmpty>
+    </dynamic>
+    <dynamic prepend="order by">
+      <isNotEmpty property="sort" >
+      		t.$sort$ 
+      </isNotEmpty>
+      <isNotEmpty property="order" >
+      		$order$ 
+      </isNotEmpty>
+    </dynamic>	
+    	
+    <dynamic>
+	     <isNotEmpty property="begin" >
+	        limit $begin$,$pageSize$
+	      </isNotEmpty>
+     </dynamic>	
+  </select>
+</sqlMap>

@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC   
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"   
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<constant name="struts.multipart.maxSize" value="2147483648" />
+	<constant name="struts.multipart.saveDir" value="/tmp" />
+ 	<package name="stk-default" extends="json-default" abstract="true">
+ 			<!-- 定义一个拦截器 -->
+		<interceptors>
+			<interceptor name="authority" class="sysInterceptor">
+			</interceptor>
+			<!-- 拦截器栈 -->
+			<interceptor-stack name="mydefault">
+				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="authority" />
+			</interceptor-stack>
+		</interceptors>
+		<!-- 设置全局 全局默认的拦截器栈	-->
+		<default-interceptor-ref name="mydefault"></default-interceptor-ref>
+		  <!-- 定义全局Result -->  
+        <global-results>  
+            <!-- 当返回login视图名时，转入/login.jsp页面 -->  
+            <result name="login" >/session.jsp
+            </result>  
+        </global-results>  
+			<!-- 设置全局 异常 抛出 全局处理
+		<global-results>
+			<result name="error">./error.html</result>
+		</global-results>
+		
+		<global-exception-mappings>
+			<exception-mapping result="error" exception="java.lang.Exception"></exception-mapping>
+		</global-exception-mappings>
+		-->
+	</package>
+	 <package name="syslogin" namespace="" extends="stk-default">
+        <action name="doLoginOn" class="loginAction" method="doLoginOn">
+			<result name="login">./login.jsp</result>
+			<result name="success">./main3.jsp</result>
+        </action>
+        <action name="loginOut" class="loginAction" method="loginOut">
+			<result name="login">./login.jsp</result>
+        </action>
+        <action name="sessionOut" class="loginAction" method="sessionOut">
+			<result name="success">/login.jsp</result>
+        </action>
+    </package>
+	
+	
+ 	<package name="manager" namespace="/manager" extends="stk-default">
+        <action name="queryDocList" class="docAction" method="queryDocList">
+        	<result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+        <action name="queryUnSubmitDocInfo" class="docAction" method="queryUnSubmitDocInfo">
+        	<result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+        
+        <action name="queryDocInfoByLeftJoin" class="docAction" method="queryDocInfoByLeftJoin">
+        	<result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+       <action name="changeRows" class="docAction" method="changeRows">
+        	<result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+  	   <action name="doDocListView" class="docAction" method="doDocListView">
+			<result name="success">../doclist.jsp</result>
+        </action>
+       <action name="doComfirmDocList" class="docAction" method="doComfirmDocList">
+			<result name="success">../confirmlist.jsp</result>
+        </action>
+        <action name="doInitDocInfo" class="docAction" method="doInitDocInfo">
+			<result name="success">../init_docinfo.jsp</result>
+        </action>
+        <action name="submitAudit" class="docAction" method="submitAudit">
+			<result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+       <action name="doAuditDocInfo" class="docAction" method="doAuditDocInfo">
+			<result name="success">../doc_audit.jsp</result>
+        </action>
+        
+        <action name="doAuditCompleted" class="docAction" method="doAuditCompleted">
+			<result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+    </package>
+
+   <package name="manager1" namespace="/manager1" extends="stk-default">
+        <action name="querySysUserList" class="sysUserAction" method="querySysUserList">
+             <result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+       <action name="changeRows" class="sysUserAction" method="changeRows">
+        	<result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+    </package>
+
+
+
+     <package name="manager2" namespace="/manager2" extends="stk-default">
+        <action name="querySysOrgList" class="sysOrgAction" method="querySysOrgList">
+        	<result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+       <action name="changeRows" class="sysOrgAction" method="changeRows">
+        	<result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+    </package>
+
+
+
+     <package name="manager3" namespace="/manager3" extends="stk-default">
+        <action name="queryDocSubjectList" class="docSubjectAction" method="queryDocSubjectList">
+        	<result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+       <action name="changeRows" class="docSubjectAction" method="changeRows">
+        	<result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+    </package>
+    
+     <package name="manager4" namespace="/manager4" extends="stk-default">
+       <action name="doSetUserCode" class="sysManagerAction" method="doSetUserCode">
+			<result name="success">../sys_user_grant.jsp</result>
+        </action>  
+       <action name="updateUserRight" class="sysManagerAction" method="updateUserRight">
+			<result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>  
+        <action name="doPreRoleMenu" class="sysManagerAction" method="doPreRoleMenu">
+			<result name="success">../app/sys_grant_menu.jsp</result>
+        </action> 
+        <action name="queryTreeMenuList1" class="sysManagerAction" method="queryTreeMenuList1">
+			<result  type="json">
+				<param name="root">jsonList</param> 
+			</result>
+        </action> 
+        <action name="queryTreeMenuList2" class="sysManagerAction" method="queryTreeMenuList2">
+			<result  type="json">
+				<param name="root">jsonList</param> 
+			</result>
+        </action> 
+        <action name="doGrantRoleMenu" class="sysManagerAction" method="doGrantRoleMenu">
+			<result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action> 
+    </package>
+    
+     <package name="manager5" namespace="/manager5" extends="stk-default">
+        <action name="querySysMenuList" class="sysMenuAction" method="querySysMenuList">
+        	<result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+       <action name="changeRows" class="sysMenuAction" method="changeRows">
+        	<result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+        <action name="doLeftMenuInit" class="sysMenuAction" method="doLeftMenuInit">
+ 				<result name="success">../left.jsp</result>
+        </action>
+        <action name="loadMenu" class="sysMenuAction" method="loadMenu">
+ 			<result  type="json">
+				<param name="root">jsonList</param> 
+			</result>
+        </action>
+    </package>
+    
+    
+    <package name="manager6" namespace="/manager6" extends="stk-default">
+        <action name="querySysRoleList" class="sysRoleAction" method="querySysRoleList">
+        	<result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+       <action name="changeRows" class="sysRoleAction" method="changeRows">
+        	<result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+    </package>
+     
+     <package name="manager7" namespace="/manager7" extends="stk-default">
+        <action name="queryDocUserList" class="docUserAction" method="queryDocUserList">
+        	<result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+       <action name="changeRows" class="docUserAction" method="changeRows">
+        	<result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+       <action name="doDocUserlist" class="docUserAction" method="doDocUserlist">
+        	<result name="success">../doc_user.jsp</result>
+        </action>        
+    </package>
+    
+     <package name="upload1" namespace="/upload1" extends="stk-default">
+        <action name="uploadImage" class="imageUpload" method="uploadImage">
+            <param name="savePath">/images</param>
+           <result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+        <action name="doUploadFile" class="imageUpload" method="doUploadFile">
+             <result name="success">../upload.jsp</result>
+        </action>  
+        <action name="doviewImage" class="imageUpload" method="doviewImage">
+             <result name="success">../imageview.jsp</result>
+        </action>                    
+        <action name="doPreViewFile" class="imageUpload" method="doPreViewFile">
+             <result name="success">../preview.jsp</result>
+        </action> 
+        <action name="querFilePathList" class="imageUpload" method="querFilePathList">
+            <result  type="json">
+				<param name="root">jsonList</param> 
+			</result>
+        </action>
+        <action name="changeRows" class="imageUpload" method="changeRows">
+         	<param name="savePath">/images</param>
+            <result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>         
+                   
+    </package>
+    
+    
+     <package name="upload2" namespace="/upload2" extends="stk-default">
+        <action name="uploadDocInfoExcel" class="excelUploadAction" method="uploadDocInfoExcel">
+             <result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+        <action name="uploadUserExcel" class="excelUploadAction" method="uploadUserExcel">
+              <result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+        <action name="uploadDocUserExcel" class="excelUploadAction" method="uploadDocUserExcel">
+            <result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+        <action name="uploadOrgExcel" class="excelUploadAction" method="uploadOrgExcel">
+             <result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+    </package>
+    
+</struts>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="sysorg">
+
+  <select id="querySysOrg"  resultClass="java.util.HashMap" parameterClass="map">
+		SELECT
+				t.id as orgId,
+				t.org_name as orgName,
+				t.remark 
+		FROM
+				t_sys_org t
+     
+  <dynamic prepend="where">
+      <isNotEmpty prepend="and" property="userId" >
+        t.id = #orgId#
+      </isNotEmpty>
+     <isNotEmpty prepend="and" property="orgName" >
+         t.org_name like concat('%', #orgName#, '%')
+      </isNotEmpty>
+    </dynamic>
+    <dynamic>
+	     <isNotEmpty property="begin" >
+	        limit $begin$,$pageSize$
+	      </isNotEmpty>
+     </dynamic>	
+  </select>
+   
+  <insert id="insertSysOrg"  parameterClass="map" >
+    insert into t_sys_org 
+    <dynamic prepend="(" >
+      <isNotEmpty prepend="," property="orgName" >
+       org_name
+      </isNotEmpty>
+     <isNotEmpty prepend="," property="remark" >
+       remark
+      </isNotEmpty>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotEmpty prepend="," property="orgName" >
+       #orgName#
+      </isNotEmpty>
+     <isNotEmpty prepend="," property="remark" >
+      #remark#
+      </isNotEmpty>
+      )
+    </dynamic>
+  </insert>
+  
+  <update id="updateSysOrgById" parameterClass="map" >
+    update t_sys_org
+    <dynamic prepend="set" >
+       <isNotEmpty prepend="," property="orgName" >
+       org_name=#orgName#
+      </isNotEmpty>
+     <isNotEmpty prepend="," property="remark" >
+       remark=#remark#
+      </isNotEmpty>
+    </dynamic>
+    	where  id = #orgId#
+  </update>
+  	
+	<delete id="deleteSysOrgById" parameterClass="map">
+  	delete 
+  	from 
+  		 	t_sys_org
+  	where	
+  			id=#orgId#	 	 
+  </delete>
+  
+</sqlMap>
