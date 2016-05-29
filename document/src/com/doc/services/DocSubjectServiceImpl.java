@@ -1,8 +1,11 @@
 package com.doc.services;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.struts2.json.JSONUtil;
 
 import com.doc.dao.IDocSubjectDao;
 
@@ -41,5 +44,17 @@ public class DocSubjectServiceImpl implements IDocSubjectService {
 				docSubjectDao.deleteDocSubjectData(list);
 			}
 		}
+	}
+
+	public Map doChartData(Map param) throws Exception {
+		try {
+			String subjectIds = (String) param.get("subjectIds");
+			Map map = (Map) JSONUtil.deserialize(subjectIds);
+			ArrayList<Map> subjectList = (ArrayList)map.get("subject");
+			System.out.println("subjectIds== "+subjectList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

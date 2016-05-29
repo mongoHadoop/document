@@ -218,6 +218,27 @@
         </action>        
     </package>
     
+    <package name="manager8" namespace="/manager8" extends="stk-default">
+        <action name="doMonthReport" class="reportAction" method="doMonthReport">
+			<result name="success">../chart/parent_report_month.jsp</result>
+        </action>
+       <action name="changeRows" class="reportAction" method="changeRows">
+        	<result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+       <action name="querySubjtctList" class="reportAction" method="querySubjtctList">
+        	<result  type="json">
+				<param name="root">jsonList</param> 
+			</result>
+        </action>
+      <action name="qryReportChart" class="reportAction" method="qryReportChart">
+        	<result  type="json">
+				<param name="root">jsonMap</param> 
+			</result>
+        </action>
+    </package>
+    
      <package name="upload1" namespace="/upload1" extends="stk-default">
         <action name="uploadImage" class="imageUpload" method="uploadImage">
             <param name="savePath">/images</param>

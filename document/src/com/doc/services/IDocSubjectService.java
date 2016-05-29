@@ -9,4 +9,6 @@ public interface IDocSubjectService {
 	public List queryDocSubject(Map param)throws Exception;
 	
 	public void changeRowsList(Map param) throws Exception;
+	
+	public Map  doChartData(Map param)throws Exception;
 }

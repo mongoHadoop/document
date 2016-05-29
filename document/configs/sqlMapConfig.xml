@@ -31,6 +31,8 @@
 <sqlMap
 		resource="com/doc/pojo/sysrolemenu.xml"/>			
 <sqlMap
-		resource="com/doc/pojo/doc_user.xml"/>			
+		resource="com/doc/pojo/doc_user.xml"/>		
+<sqlMap
+		resource="com/doc/pojo/doc_info_statis.xml"/>				
 			
 </sqlMapConfig>

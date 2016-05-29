@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="statis">
+  
+   <select id="staticsDocInfo"  resultClass="java.util.HashMap" parameterClass="map">
+  select 
+  				sum(t.money) as money
+  from 
+  				t_doc_info t
+  				
+  left join 
+				t_doc_subject t2
+      on 
+			    t.subject= t2.id
+   				
+  left join 
+				t_sys_org t3
+      on 
+			    t.org_id = t3.id			    
+  				
+  <dynamic prepend="where">
+      <isNotEmpty prepend="and" property="docId" >
+        t.id = #docId#
+      </isNotEmpty>
+     <isNotEmpty prepend="and" property="docName" >
+        t.doc_name like concat('%', #docName#, '%')
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="subject" >
+        t.subject = #subject#
+      </isNotEmpty>
+       <isNotEmpty prepend="and" property="lendType" >
+        t.lend_type = #lendType#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="money" >
+        t.money = #money#
+      </isNotEmpty>
+       <isNotEmpty prepend="and" property="orgId" >
+        t.org_id = #orgId#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="userId" >
+        t.user_id = #userId#
+      </isNotEmpty>
+       <isNotEmpty prepend="and" property="recordUser" >
+       t.record_user like concat('%', #recordUser#, '%')
+      </isNotEmpty>
+	  <isNotEmpty property="recordTimeBegin" prepend="and">
+		    <![CDATA[t.record_time >= #recordTimeBegin#  ]]>
+	  </isNotEmpty>
+	  <isNotEmpty property="recordTimeEnd" prepend=" and ">
+		    <![CDATA[t.record_time <= #recordTimeEnd#]]>
+	  </isNotEmpty>
+	  <isNotEmpty prepend="and" property="status" >
+        t.status = #status#
+      </isNotEmpty>
+    </dynamic>
+  </select>
+</sqlMap>

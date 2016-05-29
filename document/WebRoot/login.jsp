@@ -30,18 +30,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-		<style type="text/css">
-.errors {
-	background-color: #FFCCCC;
-	border: 1px solid #CC0000;
-	width: 300px;
-	margin-bottom: 8px;
-}
-
-.errors li {
-	list-style: none;
-}
-</style>
 	</head>
 
 	<body>
