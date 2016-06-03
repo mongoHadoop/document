@@ -6,12 +6,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.struts2.json.JSONUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.doc.dao.IDocInfoDao;
 import com.doc.dao.IDocSubjectDao;
 
 public class DocSubjectServiceImpl implements IDocSubjectService {
 
 	private IDocSubjectDao docSubjectDao;
+	
+	@Autowired
+	private IDocInfoDao docInfoDao;
 	
 	public void setDocSubjectDao(IDocSubjectDao docSubjectDao) {
 		this.docSubjectDao = docSubjectDao;
@@ -46,12 +51,21 @@ public class DocSubjectServiceImpl implements IDocSubjectService {
 		}
 	}
 
-	public Map doChartData(Map param) throws Exception {
+	public HashMap<String, Object> doChartData(Map param) throws Exception {
 		try {
 			String subjectIds = (String) param.get("subjectIds");
 			Map map = (Map) JSONUtil.deserialize(subjectIds);
-			ArrayList<Map> subjectList = (ArrayList)map.get("subject");
+			ArrayList<String> subjectList = (ArrayList)map.get("subject");
 			System.out.println("subjectIds== "+subjectList);
+			for (String subjectId:subjectList){
+				System.out.println(subjectId);
+				Map param1 = new HashMap();
+				param1.put("subject", subjectId);
+				param1.put("subject", subjectId);
+				
+				docInfoDao.queryDocInfoMoney(param1);
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

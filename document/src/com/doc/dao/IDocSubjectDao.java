@@ -7,6 +7,8 @@ public interface IDocSubjectDao {
 
 	public List queryDocSubject(Map param) throws Exception;
 	
+	public Map queryDocSubjectForObject(Map param) throws Exception;
+	
 	public void  addDocSubjectData(List<Map> map)throws Exception;
 	
 	public void  updateDocSubjectData(List<Map> map)throws Exception;

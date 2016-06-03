@@ -27,25 +27,21 @@ a	<script type="text/javascript" src="../resources/easyui1.4/jquery.easyui.min.j
                     method:'post',
                     valueField:'id',
                     textField:'subject',
+                    value:[1,2,3],
                     multiple:true,
                     panelHeight:'auto'
                     ">
  				 	    组织机构 : <select id="orgId" name="orgId" panelHeight="auto" style="width:100px">  
-            			<option value="" />--请选择--</option>
+            			<option value="" /> 所有站点 </option>
 							<s:iterator id="map" value="#request.orgList" status="sta">  
 							 	<option value='<s:property value="#map['orgId']"/>'>
 									<s:property value="#map['orgName']" />
 								</option>
 							</s:iterator>
             	</select>
-            	           	收支类型: <select id="lendType" name="lendType" panelHeight="auto" style="width:100px">  
-            			<option value="" />--请选择--</option>
-            			<option value="1" />--收入--</option>
-            			<option value="2" />--支出--</option>
-            	</select>
      	 审核状态 : <select id="docstatus" name="docstatus" panelHeight="auto" style="width:100px">  
-            			<option value="2" selected="true"/>--待审核--</option>
-            			<option value="3" />--审核办结--</option>
+            			<option value="2" selected="true" /> 待审核 </option>
+            			<option value="3" /> 审核办结 </option>
             	</select>	
         </div>
        <div style="margin-bottom:5px" >  
@@ -79,14 +75,7 @@ a	<script type="text/javascript" src="../resources/easyui1.4/jquery.easyui.min.j
             text: 'X月某基站各科目收支情况'
         },
         xAxis: {
-            categories: [
-                '管理费用',
-                '销售费用',
-                '原材料',
-                '库存现金',
-                '人员工资',
-                '财务费用'
-            ]
+            categories: []
         },
         yAxis: {
             min: 0,
@@ -110,7 +99,7 @@ a	<script type="text/javascript" src="../resources/easyui1.4/jquery.easyui.min.j
         },
         series: [{
             name: '收入',
-            data: [37, 46, 29, 43, 30,30],
+            data: [],
 			dataLabels: {
                 enabled: true,
                 rotation: 0,
@@ -126,7 +115,7 @@ a	<script type="text/javascript" src="../resources/easyui1.4/jquery.easyui.min.j
 
         }, {
             name: '支出',
-            data: [2, 1, 1, 4, 2, 3],
+            data: [],
 			dataLabels: {
                 enabled: true,
                 rotation: 0,
@@ -170,7 +159,9 @@ function sendAjax(webUrl,param){
 			'param.subjectIds':param.subjectIds,
 			'param.recordTimeBegin':param.recordTimeBegin,
 			'param.recordTimeEnd':param.recordTimeEnd,
-			'param.lendType':param.lendType
+			'param.lendType':param.lendType,
+			'param.orgId':param.orgId,
+			'param.docstatus':param.docstatus
     	},
 	    success: function (data) {   //成功后回调
     		var obj2 = JSON.stringify(data);
@@ -182,22 +173,31 @@ function sendAjax(webUrl,param){
 	         alert("Services通讯失败:");
 	    },
 	    beforeSend: function(){
+	    	reportChart.chart.showLoading("数据查询中请稍后...");
 	    },
 	    complete: function(XMLHttpRequest, textStatus){
+	    	reportChart.chart.hideLoading();
 		}
 	});
 }
 
 $(document).ready(function(){
 	reportChart.chart = $('#container').highcharts();         
+	reportChart.query(); 
 });
 
 
 reportChart.query = function (){
 	var subjectIds = $('#subject').combobox('getValues');
-	param.orgId = $("orgId").val();
+
+	param.orgId = $("select[name='orgId']").find("option:selected").val();
 	param.subjectIds = getSubjectId(subjectIds);
 
+	var orgName = $("select[name='orgId']").find("option:selected").text();
+	var docstatus = $("select[name='docstatus']").find("option:selected").text();
+	param.orgName = orgName;
+	param.docstatusText = docstatus;
+	
 	var recordTimeBegin = $('#recordTimeBegin').datebox('getValue');
 	var recordTimeEnd = $('#recordTimeEnd').datebox('getValue');
 	param.recordTimeBegin = recordTimeBegin;
@@ -207,10 +207,7 @@ reportChart.query = function (){
 	param.docstatus = $("#docstatus").val();
 	var webUrl ="./manager8/qryReportChart.action";
 	sendAjax(webUrl,param);
-	var title = recordTimeBegin+"收支情况";
-	reportChart.chart.setTitle({
-        text: title
-    }); 
+
 }
 reportChart.updateChart = function(objs){
 	var categories = [];
@@ -227,7 +224,11 @@ reportChart.updateChart = function(objs){
 	console.log("data1 "+data1);
 	console.log("data1 "+data1);
 	console.log("categories "+categories);
-	
+	var title = param.recordTimeBegin+param.orgName;
+	var docstatusText = param.docstatusText;
+	reportChart.chart.setTitle({
+        text: title
+    },{text:docstatusText}); 
 	reportChart.chart.xAxis[0].setCategories(categories);
 	reportChart.chart.series[0].setData(data1);
 	reportChart.chart.series[1].setData(data2);

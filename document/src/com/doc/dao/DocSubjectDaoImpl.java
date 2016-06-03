@@ -6,9 +6,16 @@ import java.util.Map;
 
 import org.springframework.orm.ibatis.SqlMapClientCallback;
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ibatis.sqlmap.client.SqlMapExecutor;
 
+
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+@Repository(value = "docSubjectDao")
 public class DocSubjectDaoImpl extends SqlMapClientDaoSupport implements
 		IDocSubjectDao {
 
@@ -72,6 +79,12 @@ public class DocSubjectDaoImpl extends SqlMapClientDaoSupport implements
 	public void updateDocSubjectData(Map map) throws Exception {
 		this.getSqlMapClientTemplate().update(
 				"docSubject.updateDocSubjectById", map);
+	}
+
+	@Override
+	public Map queryDocSubjectForObject(Map param) throws Exception {
+		return (Map) this.getSqlMapClientTemplate().queryForObject(
+				"docSubject.queryDocSubject", param);
 	}
 
 }

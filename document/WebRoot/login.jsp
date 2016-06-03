@@ -110,10 +110,18 @@ function saveUserInfo() {
 	var userCode = $("#userCode").val();  
 	var password = $("#password").val();  
 	var status =  $("#status").val();  
-
-	$.cookie("saveFlag", "true", {
-		 expires : 5  
-	});
+	console.log("userCode:"+userCode);
+	var checkBoxStatus = $("input[type='checkbox']").attr('checked');
+	
+	if(checkBoxStatus){
+		$.cookie("saveFlag", "true", {
+			 expires : 5  
+		});
+		//console.log("checked");
+	}else{
+		$.cookie("saveFlag", "false");
+		//console.log("unchecked");
+	}
 	$.cookie("userCode", userCode, {
 	 expires : 5  
 	});
@@ -128,6 +136,7 @@ function init_cookies(){
   		var userCode = $.cookie("userCode");
   		var password = $.cookie("password");
   		$("input[type='checkbox']").attr("checked","checked");
+  		//console.log("userCode:"+userCode);
 		$("input[name='userCode']").val(userCode);
 		//$("input[name='password']").val(password);
 	}

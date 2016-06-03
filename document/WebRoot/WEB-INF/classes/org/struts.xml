@@ -222,11 +222,6 @@
         <action name="doMonthReport" class="reportAction" method="doMonthReport">
 			<result name="success">../chart/parent_report_month.jsp</result>
         </action>
-       <action name="changeRows" class="reportAction" method="changeRows">
-        	<result  type="json">
-				<param name="root">jsonMap</param> 
-			</result>
-        </action>
        <action name="querySubjtctList" class="reportAction" method="querySubjtctList">
         	<result  type="json">
 				<param name="root">jsonList</param> 
@@ -234,7 +229,7 @@
         </action>
       <action name="qryReportChart" class="reportAction" method="qryReportChart">
         	<result  type="json">
-				<param name="root">jsonMap</param> 
+				<param name="root">jsonList</param> 
 			</result>
         </action>
     </package>

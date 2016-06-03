@@ -148,7 +148,6 @@ public class DocUserAction extends ActionSupport {
 			List orgList  = sysOrgService.querySysOrgList(null);
 			request.setAttribute("orgList", orgList);
 		}
-		
 		return SUCCESS;
 	}
 

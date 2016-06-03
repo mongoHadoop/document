@@ -10,5 +10,5 @@ public interface IDocSubjectService {
 	
 	public void changeRowsList(Map param) throws Exception;
 	
-	public Map  doChartData(Map param)throws Exception;
+	public Map<String,Object>  doChartData(Map param)throws Exception;
 }

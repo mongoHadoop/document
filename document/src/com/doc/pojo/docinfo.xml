@@ -295,7 +295,7 @@
   
    <select id="staticsDocInfo"  resultClass="java.util.HashMap" parameterClass="map">
   select 
-  				sum(t.money) as money
+  				 COALESCE(sum(t.money),0) as money
   from 
   				t_doc_info t
   				
@@ -310,23 +310,14 @@
 			    t.org_id = t3.id			    
   				
   <dynamic prepend="where">
-      <isNotEmpty prepend="and" property="docId" >
-        t.id = #docId#
-      </isNotEmpty>
-     <isNotEmpty prepend="and" property="docName" >
-        t.doc_name like concat('%', #docName#, '%')
-      </isNotEmpty>
       <isNotEmpty prepend="and" property="subject" >
         t.subject = #subject#
       </isNotEmpty>
-       <isNotEmpty prepend="and" property="lendType" >
-        t.lend_type = #lendType#
-      </isNotEmpty>
-      <isNotEmpty prepend="and" property="money" >
-        t.money = #money#
-      </isNotEmpty>
        <isNotEmpty prepend="and" property="orgId" >
         t.org_id = #orgId#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="lendType" >
+        t.lend_type = #lendType#
       </isNotEmpty>
        <isNotEmpty prepend="and" property="recordUser" >
        t.record_user like concat('%', #recordUser#, '%')
@@ -341,19 +332,5 @@
         t.status = #status#
       </isNotEmpty>
     </dynamic>
-    <dynamic prepend="order by">
-      <isNotEmpty property="sort" >
-      		t.$sort$ 
-      </isNotEmpty>
-      <isNotEmpty property="order" >
-      		$order$ 
-      </isNotEmpty>
-    </dynamic>	
-    	
-    <dynamic>
-	     <isNotEmpty property="begin" >
-	        limit $begin$,$pageSize$
-	      </isNotEmpty>
-     </dynamic>	
   </select>
 </sqlMap>

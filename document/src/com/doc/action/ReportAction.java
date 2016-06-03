@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.doc.services.IDocSubjectService;
+import com.doc.services.IReportService;
 import com.doc.services.ISysOrgService;
 import com.doc.util.PropertiesSingleton;
 import com.doc.util.SysInfo;
@@ -26,6 +27,8 @@ public class ReportAction extends ActionSupport {
 	private HashMap<String, String> param;// 参数
 	
 	private List jsonList;
+	
+	private HashMap<String, Object> jsonMap; 
 	
 	public List getJsonList() {
 		return jsonList;
@@ -41,7 +44,8 @@ public class ReportAction extends ActionSupport {
 	}
 	@Autowired
 	private IDocSubjectService docSubjectService;
-	
+	@Autowired
+	private IReportService reportService;
 	
 	@Autowired
 	private ISysOrgService sysOrgService;
@@ -67,11 +71,23 @@ public class ReportAction extends ActionSupport {
 		return SUCCESS;
 	}
 	public String qryReportChart() throws Exception{
-		String subjectIds =  param.get("subjectIds");
-		String docstatus =  param.get("docstatus");
-		String recordTimeEnd = param.get("recordTimeEnd");
-		docSubjectService.doChartData(param);
-		return SUCCESS;
+		try {
+			String subjectIds =  param.get("subjectIds");
+			String docstatus =  param.get("docstatus");
+			String recordTimeEnd = param.get("recordTimeEnd");
+			jsonList = reportService.doChartData(param);
+			return SUCCESS;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	public HashMap<String, Object> getJsonMap() {
+		return jsonMap;
+	}
+	public void setJsonMap(HashMap<String, Object> jsonMap) {
+		this.jsonMap = jsonMap;
 	}
 
 }
