@@ -14,7 +14,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" type="text/css" href="../resources/easyui1.4/themes/icon.css">
 	<link rel="stylesheet" type="text/css" href="../resources/easyui1.4/themes/default/easyui.css">
 	<script type="text/javascript" src="../resources/easyui1.4/jquery.min.js"></script>
-	<script type="text/javascript" src="../resources/easyui1.4/jquery.easyui.min.js"></script>
+a	<script type="text/javascript" src="../resources/easyui1.4/jquery.easyui.min.js"></script>
 	<script type="text/javascript" src="../resources/easyui1.4/locale/easyui-lang-zh_CN.js"></script>
 </head>
 <body class="easyui-layout">
@@ -53,7 +53,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
            	截止时间:<input id="recordTimeEnd" class="easyui-datebox"  style="width:150px"> 
 
             	
-            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="query()">查询</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="reportChart.query()">查询</a>
         </div>  
 </form>        
 </div>
@@ -61,63 +61,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <div data-options="region:'center'" style="padding:5px;background:#eee;">
 					<div id="container" style="min-width:700px;height:400px"></div>
     </div> 
-    </div>
-<script type="text/javascript">
-
-var param = {};
-function query(){
-	var subjectIds = $('#subject').combobox('getValues');
-	param.orgId = $("orgId").val();
-	param.subjectIds = getSubjectId(subjectIds);
-
-	var recordTimeBegin = $('#recordTimeBegin').datebox('getValue');
-	var recordTimeEnd = $('#recordTimeEnd').datebox('getValue');
-	param.recordTimeBegin = recordTimeBegin;
-	param.recordTimeEnd = recordTimeEnd;
-	
-	param.lendType = $("#lendType").val();
-	param.docstatus = $("#docstatus").val();
-	var webUrl ="./manager8/qryReportChart.action";
-	sendAjax(webUrl,param);
-}
-function getSubjectId(subjectIds){
-	var record = {
-			subject :[]
-			};
-	if (subjectIds.length>0) {
-		for (var i = 0; i < subjectIds.length;i++) {
-			record.subject.push(subjectIds[i]);
-		}
-	}
-	var rowsStr = JSON.stringify(record);
-	return rowsStr;
-}
-
-function sendAjax(webUrl,param){
-	$.ajax({
-	    url: webUrl,
-	    datatype: "json",
-	    type: 'post',
-	    data:{
-			'param.subjectIds':param.subjectIds,
-			'param.recordTimeBegin':param.recordTimeBegin,
-			'param.recordTimeEnd':param.recordTimeEnd,
-			'param.lendType':param.lendType
-    	},
-	    success: function (e) {   //成功后回调
-	    	console.log(e)
-	    },
-	    error: function(e){    //失败后回调
-	         alert("Services通讯失败:");
-	    },
-	    beforeSend: function(){
-	    },
-	    complete: function(XMLHttpRequest, textStatus){
-		}
-	});
-}
-
-</script>    
+    </div> 
   <script type="text/javascript" src="../resources/highcharts/highcharts.js"></script>
    <script>
    var chart1 = null;
@@ -200,13 +144,95 @@ function sendAjax(webUrl,param){
     });
 
 });							
+  </script>
+<script type="text/javascript">
+var reportChart = {};
+var param = {};
+function getSubjectId(subjectIds){
+	var record = {
+			subject :[]
+			};
+	if (subjectIds.length>0) {
+		for (var i = 0; i < subjectIds.length;i++) {
+			record.subject.push(subjectIds[i]);
+		}
+	}
+	var rowsStr = JSON.stringify(record);
+	return rowsStr;
+}
 
-  $(document).ready(function(){
-	   var chart = $('#container').highcharts();         
-	   chart.setTitle({
-           text: 'X月某基站ssdfsf科目收支情况'
-       }); 
+function sendAjax(webUrl,param){
+	$.ajax({
+	    url: webUrl,
+	    datatype: "json",
+	    type: 'post',
+	    data:{
+			'param.subjectIds':param.subjectIds,
+			'param.recordTimeBegin':param.recordTimeBegin,
+			'param.recordTimeEnd':param.recordTimeEnd,
+			'param.lendType':param.lendType
+    	},
+	    success: function (data) {   //成功后回调
+    		var obj2 = JSON.stringify(data);
+	    	console.log("jsonMap ="+obj2);
+	       // data = $.parseJSON(data);
+	    	reportChart.updateChart(data); 
+	    },
+	    error: function(e){    //失败后回调
+	         alert("Services通讯失败:");
+	    },
+	    beforeSend: function(){
+	    },
+	    complete: function(XMLHttpRequest, textStatus){
+		}
 	});
+}
+
+$(document).ready(function(){
+	reportChart.chart = $('#container').highcharts();         
+});
+
+
+reportChart.query = function (){
+	var subjectIds = $('#subject').combobox('getValues');
+	param.orgId = $("orgId").val();
+	param.subjectIds = getSubjectId(subjectIds);
+
+	var recordTimeBegin = $('#recordTimeBegin').datebox('getValue');
+	var recordTimeEnd = $('#recordTimeEnd').datebox('getValue');
+	param.recordTimeBegin = recordTimeBegin;
+	param.recordTimeEnd = recordTimeEnd;
+	
+	param.lendType = $("#lendType").val();
+	param.docstatus = $("#docstatus").val();
+	var webUrl ="./manager8/qryReportChart.action";
+	sendAjax(webUrl,param);
+	var title = recordTimeBegin+"收支情况";
+	reportChart.chart.setTitle({
+        text: title
+    }); 
+}
+reportChart.updateChart = function(objs){
+	var categories = [];
+	var data1 =[];
+	var data2 =[];
+	for(var i=0; i<objs.length; i++){
+		categories[i] = objs[i].subject;
+		//console.log("cate "+categories[i]);
+		var debnum = objs[i].debitNum.money;
+		var creditnum = objs[i].creditNum.money;
+		data1.push(debnum);
+		data2.push(creditnum);
+	}
+	console.log("data1 "+data1);
+	console.log("data1 "+data1);
+	console.log("categories "+categories);
+	
+	reportChart.chart.xAxis[0].setCategories(categories);
+	reportChart.chart.series[0].setData(data1);
+	reportChart.chart.series[1].setData(data2);
+}
+
   </script>
 </body>
 </html>

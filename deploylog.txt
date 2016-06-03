@@ -1,0 +1,3 @@
+SEVERE: Exception fixing docBase for context [/doc]
+java.util.zip.ZipException: error in opening zip file
+编译环境的JDK和生产环境的JDK不一致 
