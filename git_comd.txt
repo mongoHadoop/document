@@ -83,7 +83,7 @@ $ git push origin master
 
 2. 如何从远程库克隆？
 
-上面我们了解了先有本地库，后有远程库时候，如何关联远程库。
+
 
 git clone git@github.com:michaelliao/gitskills.git
 或者

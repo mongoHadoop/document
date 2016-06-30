@@ -21,6 +21,18 @@ ubuntu add-apt-repository: command not found 解决方案
 sudo apt-get install python-software-properties
 sudo apt-get install software-properties-common
 
+
+如果即安装了jdk7,又安装了jdk8,要实现两者的切换,可以:
+
+　　jdk8 切换到jdk7
+
+sudo update-java-alternatives -s java-7-oracle
+　　jdk7 切换到jdk8
+
+sudo update-java-alternatives -s java-8-oracle
+
+apt-cache search "xxxx"
+
 Tomcat安装运行方式
 安装命令：sudo apt-get install tomcat7
     注意：
