@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+ <head>
+  <TITLE> ZTREE DEMO </TITLE>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <!-- Bootstrap Core CSS -->
+    <link href="../resources/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="../resources/easyui-1.4.5/themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../resources/easyui-1.4.5/themes/default/easyui.css">
+	<script type="text/javascript" src="../resources/easyui-1.4.5/jquery.min.js"></script>
+	<script type="text/javascript" src="../resources/easyui-1.4.5/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../resources/easyui-1.4.5/locale/easyui-lang-zh_CN.js"></script>
+
+	
+  	<link rel="stylesheet" href="../resources/ztree/css/demo.css" type="text/css">
+	<link rel="stylesheet" href="../resources/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+	<script type="text/javascript" src="../resources/ztree/js/jquery-1.4.4.min.js"></script>
+	<script type="text/javascript" src="../resources/ztree/js/jquery.ztree.core.js"></script>
+	<script type="text/javascript" src="../resources/ztree/js/jquery.ztree.exedit.js"></script>
+	<script type="text/javascript" src="../resources/ztree/js/jquery.ztree.excheck.js"></script>
+</head>
+	<style type="text/css">
+.ztree li span.button.add {margin-left:2px; margin-right: -1px; background-position:-144px 0; vertical-align:top; *vertical-align:middle}
+	</style>
+
+<SCRIPT type="text/javascript" >
+	var zTree;
+	var demoIframe;
+
+	var setting = {
+		view: {
+			dblClickExpand: false,
+			showLine: true,
+			selectedMulti: false,
+			addHoverDom: addHoverDom,
+			removeHoverDom: removeHoverDom,
+		},
+		async: {
+			enable: false,
+			type: "post",
+			url: "<%=basePath%>manager4/queryTreeMenuList2.action",
+			autoParam: ["id"],
+			otherParam: { "param.roleId":"${roleId}", "name":"test"}
+		},	
+		data: {
+			simpleData: {
+				enable:true,
+				idKey: "id",
+				pIdKey: "pId",
+				rootPId: "0"
+			}
+		},
+		callback: {
+				beforeDrag: beforeDrag,
+				beforeDrop: beforeDrop,
+				onDrop: zTreeOnDrop,
+				beforeEditName: zTreeBeforeEditName,
+				beforeRename:zTreeBeforeRename
+		},
+		edit: {
+				enable: true,
+				showRemoveBtn: true,
+				showRenameBtn: true,
+				isMove:false,
+				isCopy:true,
+		}
+	};
+
+	var zNodes =[
+		{id:101, pId:1, name:"最简单的树 --  标准 JSON 数据", file:"core/standardData"},
+		{id:102, pId:1, name:"最简单的树 --  简单 JSON 数据", file:"core/simpleData"},
+		{id:103, pId:1, name:"不显示 连接线", file:"core/noline"},
+		{id:104, pId:1, name:"不显示 节点 图标", file:"core/noicon"},
+		{id:105, pId:1, name:"自定义图标 --  icon 属性", file:"core/custom_icon"},
+		{id:106, pId:1, name:"自定义图标 --  iconSkin 属性", file:"core/custom_iconSkin"},
+		{id:107, pId:1, name:"自定义字体", file:"core/custom_font"},
+		{id:115, pId:1, name:"超链接演示", file:"core/url"},
+		{id:108, pId:1, name:"异步加载 节点数据", file:"core/async"},
+		{id:109, pId:1, name:"用 zTree 方法 异步加载 节点数据", file:"core/async_fun"},
+		{id:110, pId:1, name:"用 zTree 方法 更新 节点数据", file:"core/update_fun"},
+		{id:111, pId:1, name:"单击 节点 控制", file:"core/click"},
+		{id:112, pId:1, name:"展开 / 折叠 父节点 控制", file:"core/expand"},
+		{id:113, pId:1, name:"根据 参数 查找 节点", file:"core/searchNodes"},
+		{id:114, pId:1, name:"其他 鼠标 事件监听", file:"core/otherMouse"}
+	];
+
+	var zNodes2 =[
+	     		
+	     		{id:101, pId:1, name:"最简单的树 --  标准 JSON 数据", file:"core/standardData"},
+	     		{id:102, pId:1, name:"最简单的树 --  简单 JSON 数据", file:"core/simpleData"},
+	     		{id:103, pId:1, name:"不显示 连接线", file:"core/noline"},
+	     		{id:104, pId:1, name:"不显示 节点 图标", file:"core/noicon"},
+	     		{id:105, pId:1, name:"自定义图标 --  icon 属性", file:"core/custom_icon"},
+	     		{id:106, pId:1, name:"自定义图标 --  iconSkin 属性", file:"core/custom_iconSkin"},
+	     		{id:107, pId:1, name:"自定义字体", file:"core/custom_font"},
+	     		{id:115, pId:1, name:"超链接演示", file:"core/url"},
+	     		{id:108, pId:1, name:"异步加载 节点数据", file:"core/async"},
+	     		{id:109, pId:1, name:"用 zTree 方法 异步加载 节点数据", file:"core/async_fun"},
+	     		{id:110, pId:1, name:"用 zTree 方法 更新 节点数据", file:"core/update_fun"},
+	     		{id:111, pId:1, name:"单击 节点 控制", file:"core/click"},
+	     		{id:112, pId:1, name:"展开 / 折叠 父节点 控制", file:"core/expand"},
+	     		{id:113, pId:1, name:"根据 参数 查找 节点", file:"core/searchNodes"},
+	     		{id:114, pId:1, name:"其他 鼠标 事件监听", file:"core/otherMouse"}
+	     	];
+	
+
+	$(document).ready(function(){
+		var treeObj1 = $("#tree1");
+		var treeObj2 = $("#tree2");
+		var rootNode1 = { id:1, pId:0, name:"系统菜单列表", open:true, iconOpen:"../resources/ztree/css/zTreeStyle/img/diy/1_open.png",
+				 iconClose:"../resources/ztree/css/zTreeStyle/img/diy/1_close.png"};
+
+		var rootNode2 = { id:1, pId:0, name:"已授权菜单列表", open:true, iconOpen:"../resources/ztree/css/zTreeStyle/img/diy/1_open.png",
+				 iconClose:"../resources/ztree/css/zTreeStyle/img/diy/1_close.png"}; 
+		zNodes.push(rootNode1);
+		zNodes2.push(rootNode2);
+		treeObj1 = $.fn.zTree.init(treeObj1, setting, zNodes);
+	//	treeObj2 = $.fn.zTree.init(treeObj2, setting, zNodes2);
+	});
+
+	function beforeDrag(treeId, treeNodes) {
+		for (var i=0,k = treeNodes.length; i< k; i++) {
+			
+			if (treeNodes[i]['pId'] == "0") {//禁止拖ROOT
+				return false;
+			}
+		}
+		return true;
+	}
+	function beforeDrop(treeId, treeNodes, targetNode, moveType) {
+		var flag = moveType
+		var targetNodeId = targetNode['pId'];
+		console.log("pid "+targetNodeId+" targetNode = "+targetNode['name']+" moveType "+moveType);
+		if(targetNodeId=="0" && moveType=="inner"){//必须是放在ROOT节点内部
+			return true;
+		}else if(targetNodeId=="1"&&moveType=="prev"){
+			return true;
+		}else if(targetNodeId=="1"&&moveType=="next"){
+			return true;
+		}else{
+			return false;
+		}
+	}	
+	
+	function zTreeOnDrop(event, treeId, treeNodes, targetNode, moveType) {
+	
+		for (var i=0,k = treeNodes.length; i< k; i++) {
+			console.log(k +" treeNodes["+i+"]"+treeNodes[i]['name']);
+		}
+	
+	};
+	
+	
+	var newCount = 1;
+	var currenttreeNode = null;
+	function addHoverDom(treeId, treeNode) {
+			var sObj = $("#" + treeNode.tId + "_span");
+			//console.log(sObj);
+			if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
+			var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+				+ "' title='add node' onfocus='this.blur();'></span>";
+			sObj.after(addStr);
+			var btn = $("#addBtn_"+treeNode.tId);
+			if (btn) btn.bind("click", function(){
+				//var zTree = $.fn.zTree.getZTreeObj("tree1");
+				changefieldset();
+				$("input[id='parentMenu']").val(treeNode.name);
+				//console.log($("input[id='parentMenu']"));
+				//console.log(treeNode.name);
+				$("input[id='parentMenuId']").val(treeNode.id);
+				currenttreeNode = treeNode;
+				$("button[type='button']").bind("click", addTreeNode);
+				//zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"new node" + (newCount++)});
+				return false;
+			});
+	 };
+	function removeHoverDom(treeId, treeNode) {
+		$("#addBtn_"+treeNode.tId).unbind().remove();
+	};
+	
+	function zTreeBeforeEditName(treeId, treeNode, newName, isCancel) {
+		//alert();
+		$("form > fieldset").removeAttr("disabled");
+		$("input[id='menuId']").val(treeNode.id);
+		currenttreeNode = treeNode;
+		linkData();
+		changefieldset();
+		$("button[type='button']").bind("click", updateTreeNode);
+		return false;
+	}
+	function zTreeBeforeRename(treeId, treeNode, newName, isCancel) {
+		return true;
+	}
+	function linkData(){
+		$("input[id='menuName']").val(currenttreeNode.name);
+	    $("input[id='URL']").val(currenttreeNode.url);
+		$("input[id='remark']").val(currenttreeNode.remark);
+	}
+	
+	function changefieldset(){
+		$("form")[0].reset();
+		$("form > fieldset").removeAttr("disabled");
+	};
+	
+	function addTreeNode(){
+		var menuName = $("input[id='menuName']").val();
+		var URL = $("input[id='URL']").val();
+		var remark = $("input[id='remark']").val();
+		var zTree = $.fn.zTree.getZTreeObj("tree1");
+		zTree.addNodes(currenttreeNode, {id:(100 + newCount), pId:currenttreeNode.id, name:menuName});
+		$("form > fieldset").attr("disabled","true");
+		$("button[type='button']").unbind();
+	}
+	function updateTreeNode(){
+		var menuName = $("input[id='menuName']").val();
+		var URL = $("input[id='URL']").val();
+		var remark = $("input[id='remark']").val();
+		var zTree = $.fn.zTree.getZTreeObj("tree1");
+		currenttreeNode.name = menuName;
+		currenttreeNode.url= URL;
+		currenttreeNode.remark = remark;
+		zTree.updateNode(currenttreeNode);
+		//zTree.updateNode(currenttreeNode, {id:(100 + newCount), pId:currenttreeNode.id, name:menuName});
+		$("form > fieldset").attr("disabled","true");
+		$("button[type='button']").unbind();
+	}
+  </SCRIPT>
+ <body class="easyui-layout">
+	<div data-options="region:'west',split:true"  style="width:300px;padding:0px;overflow:hidden;">
+		<ul id="tree1" class="ztree" style="width:100%; overflow:auto; height:100%;margin-top:0px">
+	</div>
+	<div data-options="region:'center'"  style="overflow:hidden; padding:10px" >
+ <form class="form-horizontal ">
+   <fieldset disabled>
+    <div class="form-group">
+    <label  for="parentMenu" class="col-sm-2 control-label">父节点</label>
+    <div class="col-sm-5">
+      <input type="text" class="form-control" id="parentMenu" disabled>	
+	  <input type="hidden" class="form-control" id="parentMenuId" >	
+    </div>
+   </div>
+   <div class="form-group">
+    <label  for="menuName" class="col-sm-2 control-label">菜单名称</label>
+    <div class="col-sm-5">
+      <input type="text" class="form-control" id="menuName" placeholder="菜单名称...">	
+	   <input type="hidden" class="form-control" id="menuId" >	
+    </div>
+   </div>
+   <div class="form-group">
+    <label for="URL" class="col-sm-2 control-label">URL</label>
+    <div class="col-sm-5">
+      <input type="text" class="form-control" id="URL" placeholder="URL...">
+    </div>
+   </div>
+   <div class="form-group">
+    <label for="remark" class="col-sm-2 control-label">描述</label>
+    <div class="col-sm-5">
+      <input type="text" class="form-control" id="remark" placeholder="描述...">
+    </div>
+   </div>
+   <div class="form-group">
+     <div class="col-sm-offset-2 col-sm-10">
+	  <button type="button" class="btn btn-primary" >提交</button>
+	  <button type="reset" class="btn btn-primary">清除</button>
+     </div>
+   </div>
+   </fieldset>
+  </form>
+	</div>
+</body>
+</html>		
